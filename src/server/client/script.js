@@ -189,8 +189,6 @@ let userDraw = function(chart)
 let addTouchListeners = function(chartEl)
 {
     chartEl.addEventListener("touchstart", function (e) {
-        console.log("touch");
-        mousePos = getTouchPos(canvas, e);
         var touch = e.touches[0];
         var mouseEvent = new MouseEvent("mousedown", {
             clientX: touch.clientX,
@@ -201,7 +199,7 @@ let addTouchListeners = function(chartEl)
     }, false);
     chartEl.addEventListener("touchend", function (e) {
         var mouseEvent = new MouseEvent("mouseup", {});
-        canvas.dispatchEvent(mouseEvent);
+        chartEl.dispatchEvent(mouseEvent);
     }, false);
     chartEl.addEventListener("touchmove", function (e) {
         var touch = e.touches[0];
