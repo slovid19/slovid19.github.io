@@ -29,7 +29,7 @@ h3 {
 }
 .tabs {
     overflow: hidden;
-    background-color: #eee; 
+    background-color: #ddd; 
 }
 .tabs button {
     background-color: inherit;
@@ -48,7 +48,7 @@ h3 {
     border: 0;
 }
 .tabs button:hover {
-    background-color: #ddd;
+    background-color: #bbb;
 }
 
 /* Create an active/current tablink class */

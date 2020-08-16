@@ -132,7 +132,7 @@ let addButtonListeners = function(linearId, logarithmicId, linearOpts, logarithm
             document.getElementById(logarithmicId).className = "tablinks";
             chart.options.scales.yAxes = [linearOpts] ;
             chart.update();
-         });
+        });
     document.getElementById(logarithmicId).addEventListener("click", 
         function () 
         {
@@ -153,7 +153,7 @@ let userDraw = function(chart)
     console.log("redrawing");
     let marginX = 4;
     let marginY = 3;
-//    chart.ctx.fillStyle = "rgba(0,0,0,0.1)";
+    //    chart.ctx.fillStyle = "rgba(0,0,0,0.1)";
     for(let i in chart.legend.legendItems)
     {
         //(boolean * 2 + boolean) is a number between 0-3 in javascript 
@@ -161,21 +161,21 @@ let userDraw = function(chart)
             + chart.hovering[i];
         switch(backgroundType)
         {
-            //not hidden and not mousehover
+                //not hidden and not mousehover
             case 0:
                 chart.ctx.fillStyle = "rgba(0,0,0,0.0)";
                 break;
-            //not hidden and mousehover
+                //not hidden and mousehover
             case 1:
                 chart.ctx.fillStyle = "rgba(0,0,0,0.1)";
                 break;
-            //hidden and not mousehover
+                //hidden and not mousehover
             case 2:
-                chart.ctx.fillStyle = "rgba(0,0,0,0.1)";
-                break;
-            //hidden and mousehover
-            case 3:
                 chart.ctx.fillStyle = "rgba(0,0,0,0.2)";
+                break;
+                //hidden and mousehover
+            case 3:
+                chart.ctx.fillStyle = "rgba(0,0,0,0.1)";
                 break;
         }
         chart.ctx.fillRect(
@@ -185,6 +185,34 @@ let userDraw = function(chart)
             chart.legend.legendHitBoxes[i].height + 2*marginY
         );
     }
+}
+let addTouchListeners = function(chartEl)
+{
+    chartEl.addEventListener("touchstart", function (e) {
+        console.log("touch");
+        mousePos = getTouchPos(canvas, e);
+        var touch = e.touches[0];
+        var mouseEvent = new MouseEvent("mousedown", {
+            clientX: touch.clientX,
+            clientY: touch.clientY,
+            originalTarget: chartEl
+        });
+        chartEl.dispatchEvent(mouseEvent);
+    }, false);
+    chartEl.addEventListener("touchend", function (e) {
+        var mouseEvent = new MouseEvent("mouseup", {});
+        canvas.dispatchEvent(mouseEvent);
+    }, false);
+    chartEl.addEventListener("touchmove", function (e) {
+        var touch = e.touches[0];
+        var mouseEvent = new MouseEvent("mousemove", {
+            clientX: touch.clientX,
+            clientY: touch.clientY,
+            originalTarget: chartEl
+        });
+        chartEl.dispatchEvent(mouseEvent);
+    }, false);
+
 }
 let initAgeCases = function(ageTimeData)
 {
@@ -200,6 +228,7 @@ let initAgeCases = function(ageTimeData)
     var ctx = chartEl.getContext('2d');
     var caseLineChart = createLogChart(ctx, labels, datasets, logarithmicOptions);
     caseLineChart.userDraw = userDraw;
+    addTouchListeners(chartEl);
     addButtonListeners("linearAgeTab", "logarithmicAgeTab", linearOptions, logarithmicOptions, caseLineChart);
 
     resizeChart(caseLineChart);

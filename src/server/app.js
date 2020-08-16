@@ -20,7 +20,7 @@ app.get('/style.css', function(req, res) {
     res.sendFile(path.join(__dirname + "/client/style.css"));
 });
 app.get('/chart.js', function(req, res) {
-    res.sendFile(path.join(__dirname + "/node_modules/chart.js/dist/Chart.js"));
+    res.sendFile(path.join(__dirname + "/client/Chart.js"));
 });
 app.get('/SLOLinearHighlight.png', function(req, res) {
     res.sendFile(path.join(__dirname + "/client/SLOLinearHighlight.png"));
