@@ -42,59 +42,7 @@ let createLinearOpts = function(maxCases)
     return opts;
 
 }
-let resizeChart = function(chart, size)
-{
-    if(chart.canvas.height < 500)
-    {
-        chart.canvas.height = 500;
-        chart.canvas.style.height = "500px";
-    }
-    chart.update();
-}
-let withinHitBox = function(mouseX, mouseY, hitBox)
-{
-    let padding = 1;
-    return (mouseX+padding > hitBox.left 
-        && mouseX-padding < hitBox.left + hitBox.width
-        && mouseY+padding > hitBox.top 
-        && mouseY-padding < hitBox.top + hitBox.height)
-}
-let setLegendItemHover = function(index, chart)
-{
-    if(chart.hovering[index] == true)
-        return false;
-    chart.hovering[index] = true;
-    return true;
-}
-let unsetLegendItemHover = function(index, chart)
-{
-    if(chart.hovering[index] == false)
-        return false;
-    chart.hovering[index] = false;
-    return true;
-}
-let chartLegendHover = function(ev, els, chart)
-{
-    let rect = ev.originalTarget.getBoundingClientRect();
-    let mouseX = ev.clientX - rect.left;
-    let mouseY = ev.clientY - rect.top;
-    let redraw = false;
-    let click = ev.type == "click";
-    for(let i in chart.legend.legendHitBoxes)
-    {
-        let legendHitbox = chart.legend.legendHitBoxes[i];
-        if(withinHitBox(mouseX, mouseY, legendHitbox))
-        {
-            redraw = redraw || setLegendItemHover(i, chart);
-        }
-        else
-        {
-            redraw = redraw || unsetLegendItemHover(i, chart);
-        }
-    }
-    if(redraw)
-        chart.draw(chart);
-}
+
 let createLogChart = function(ctx, labels, datasets, logOptions)
 {
     let chart = new Chart(ctx, {
@@ -107,19 +55,16 @@ let createLogChart = function(ctx, labels, datasets, logOptions)
         options: 
         {
             responsive: true,
-            onResize: resizeChart,
-            maintainAspectRatio: false,
+            maintainAspectRatio: true,
+            legend: {
+                display: false
+            },
             scales: {
                 yAxes:[logOptions],
                 xAxes:[{scaleLabel: {display: true, labelString: "Date"}}]
             }
         },
     });
-    chart.options.onHover = (ev, els) => {chartLegendHover(ev,els,chart)};
-    chart.options.onClick = (ev, els) => {chartLegendHover(ev,els,chart)};
-    chart.hovering = [];
-    for(let i = 0 ; i < chart.legend.legendItems.length; i++)
-        chart.hovering[i] = false;
     return chart;
 
 }
@@ -146,45 +91,6 @@ let addButtonListeners = function(linearId, logarithmicId, linearOpts, logarithm
         });
 
 
-}
-let userDraw = function(chart)
-{
-
-    console.log("redrawing");
-    let marginX = 4;
-    let marginY = 3;
-    //    chart.ctx.fillStyle = "rgba(0,0,0,0.1)";
-    for(let i in chart.legend.legendItems)
-    {
-        //(boolean * 2 + boolean) is a number between 0-3 in javascript 
-        let backgroundType = chart.legend.legendItems[i].hidden * 2
-            + chart.hovering[i];
-        switch(backgroundType)
-        {
-                //not hidden and not mousehover
-            case 0:
-                chart.ctx.fillStyle = "rgba(0,0,0,0.0)";
-                break;
-                //not hidden and mousehover
-            case 1:
-                chart.ctx.fillStyle = "rgba(0,0,0,0.1)";
-                break;
-                //hidden and not mousehover
-            case 2:
-                chart.ctx.fillStyle = "rgba(0,0,0,0.2)";
-                break;
-                //hidden and mousehover
-            case 3:
-                chart.ctx.fillStyle = "rgba(0,0,0,0.1)";
-                break;
-        }
-        chart.ctx.fillRect(
-            chart.legend.legendHitBoxes[i].left - marginX,
-            chart.legend.legendHitBoxes[i].top - marginY,
-            chart.legend.legendHitBoxes[i].width + 2*marginX,
-            chart.legend.legendHitBoxes[i].height + 2*marginY
-        );
-    }
 }
 let addTouchListeners = function(chartEl)
 {
@@ -225,12 +131,67 @@ let initAgeCases = function(ageTimeData)
     var chartEl = document.getElementById("ageCaseGraph");
     var ctx = chartEl.getContext('2d');
     var caseLineChart = createLogChart(ctx, labels, datasets, logarithmicOptions);
-    caseLineChart.userDraw = userDraw;
+    createLegend(caseLineChart, document.getElementById("ageCaseLegend"));
     addTouchListeners(chartEl);
     addButtonListeners("linearAgeTab", "logarithmicAgeTab", linearOptions, logarithmicOptions, caseLineChart);
-
-    resizeChart(caseLineChart);
 }
+let createLegendColor = function(color)
+{
+    let el = document.createElement("div");
+    el.className = "legendColor";
+    el.style.backgroundColor = color;
+    return el;
+}
+let createLegendText = function(text)
+{
+    let el = document.createElement("span");
+    el.className = "legendText";
+    el.innerText = text;
+    return el;
+}
+let setLegendItemHidden = function(el, item, chart)
+{
+    chart.getDatasetMeta(item.datasetIndex).hidden = true;
+    item.hidden = true;
+    chart.update();
+    el.className = "legendItem hidden";
+}
+let setLegendItemShown = function(el, item, chart)
+{
+    chart.getDatasetMeta(item.datasetIndex).hidden = false;
+    item.hidden = false;
+    chart.update();
+    el.className = "legendItem shown";
+}
+let legendItemClicked = function(el, item, chart)
+{
+    (item.hidden) ? 
+        setLegendItemShown(el, item, chart) :
+        setLegendItemHidden(el, item, chart);
+}
+let createLegendItem = function(item, chart)
+{
+    let el = document.createElement("div");
+    el.className = "legendItem";
+    if(item.hidden)
+        el.className += " hidden";
+    else
+        el.className += " shown";
+    el.appendChild(createLegendColor(item.fillStyle));
+    el.appendChild(createLegendText(item.text));
+    let itemClick = () => {legendItemClicked(el, item, chart)};
+    el.addEventListener("click", itemClick);
+    return el;
+}
+let createLegend = function(chart, legendContainer)
+{
+    for(i in chart.legend.legendItems)
+    {
+        let item = chart.legend.legendItems[i];
+        legendContainer.appendChild(createLegendItem(item, chart));
+    }
+}
+
 
 
 let initTownCases = function(townTimeData)
@@ -246,15 +207,15 @@ let initTownCases = function(townTimeData)
     var chartEl = document.getElementById("townCaseGraph");
     var ctx = chartEl.getContext('2d');
     var caseLineChart = createLogChart(ctx, labels, datasets, logarithmicOptions);
-    caseLineChart.userDraw = userDraw;
+    createLegend(caseLineChart, document.getElementById("townCaseLegend"));
+
 
     addButtonListeners("linearTownTab", "logarithmicTownTab", linearOptions, logarithmicOptions, caseLineChart);
-    resizeChart(caseLineChart);
 }
 
 window.onload = function()
 {
-    //Chart.defaults.global.maintainAspectRatio = false;
+    Chart.defaults.global.maintainAspectRatio = false;
     fetch("ageTimeData.json")
         .then(response => response.json())
         .then(json => initAgeCases(json))

@@ -2,9 +2,9 @@
 <html lang="en">
     <head>
         <meta charset="utf-8"/>
-        <script src="src/server/client/script.js"></script>
-        <script src="src/server/client/Chart.js"></script>
-        <link rel="stylesheet" type="text/css" href="src/server/client/style.css">
+        <script src="script.js"></script>
+        <script src="chart.js"></script>
+        <link rel="stylesheet" type="text/css" href="style.css">
         <title>SLOvid 19</title>
     </head>
     <body>
@@ -25,6 +25,7 @@
 
                 <div class = "tabContent">
                     <canvas class = "graph" id = "ageCaseGraph"></canvas>
+                    <div class = "legend" id = "ageCaseLegend"></div>
                 </div>
                 <div class = "updateTime">
                     <p id = "updateAgeTime"></p>
@@ -46,6 +47,7 @@
 
                 <div class = "tabContent">
                     <canvas class="graph" id = "townCaseGraph"></canvas>
+                    <div class = "legend" id = "townCaseLegend"></div>
                 </div>
                 <div class = "details">
                     <p><b>Note:</b> Less total cases are reported here than by age because these locations do not cover the whole county.</p>
@@ -60,13 +62,13 @@
         With Cal Poly set to reopen "de-densified" in the Fall, it is important to have easily understandable data on the ongoing pandemic within SLO county.         </p>
         <h4>Why a Logarithmic Graph</h4>
         <p class="about">
-        Without intervention, viruses spread exponentially. Exponential growth of a disease can quickly overwhelm healthcare institutions. The logarithmic graphs shown above can better illustrate whether the growth rate of COVID-19 is exponential or not. 
+        <a href="https://www.washingtonpost.com/graphics/2020/world/corona-simulator/">Without intervention, viruses spread exponentially.</a> Exponential growth of a disease can quickly overwhelm healthcare institutions. The logarithmic graphs shown above can better illustrate whether the growth rate of COVID-19 is exponential or not. 
         </p> 
         <h4>Understanding a Logarithmic Scale</h4>
         <p class="about">
         A straight steep line on a logarithmic scale reveals fast exponential growth, but a downward curve or a flat line reveals a slower growth rate. The graph of COVID-19 cases often switches between the two. For instance, the cases in San Luis Obispo were exponentially growing in mid-June and thus the logarithmic graph of those cases has a roughly straight line during that time. That concept is highlighted in the graph below:
         </p>
-        <img class="exampleGraph" src = "src/server/client/SLOLinearHighlight.png"/>
+        <img class="exampleGraph" src = "SLOLinearHighlight.png"/>
         <h4>Interpreting Results</h4>
         <p class="about">
         Since social distancing affects the growth rate of the coronavirus, a logarithmic graph can sometimes indicate how well or how poorly a population has been social distancing. This allows for a better understanding on the impact certain events and policies have on the growth of COVID-19.

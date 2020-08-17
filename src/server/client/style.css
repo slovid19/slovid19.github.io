@@ -7,15 +7,54 @@ h2 {
 }
 h3 {
     text-align: center;
+    font-size: 1.3em;
+}
+.legendColor {
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 1px;
+    margin-right: 2px;
+    border-color: #000000;
+    border-width: 1px;
+    border-style: solid;
+    width: 2em;
+    height: 0.9em;
+}
+.legendText {
+    vertical-align: middle;
+    font-size: 0.7em;
+    margin: auto;
+}
+.legend {
+    display: inline-block;
+    text-align: center;
+    width: 100%;
+    margin: auto;
+}
+.legendItem {
+    display: inline-block;
+    margin: 5px;
+    padding: 2px;
+}
+.legendItem.hidden {
+    background-color: #bbb;
+}
+.legendItem.hidden:hover {
+    background-color: #ccc;
+}
+.legendItem.shown:hover {
+    background-color: #ddd;
 }
 .graphContent {
     border: 1px solid #ccc;
     border-style: solid;
 }
+.graph {
+    width: 100%;
+}
 .exampleGraph {
     display:block;
     margin: auto;
-    width:70%;
 }
 .details {
     font-size: 0.8em;
@@ -29,7 +68,7 @@ h3 {
 }
 .tabs {
     overflow: hidden;
-    background-color: #ddd; 
+    background-color: #ccc; 
 }
 .tabs button {
     background-color: inherit;
@@ -48,7 +87,7 @@ h3 {
     border: 0;
 }
 .tabs button:hover {
-    background-color: #bbb;
+    background-color: #ddd;
 }
 
 /* Create an active/current tablink class */
