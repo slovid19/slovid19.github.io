@@ -19,7 +19,6 @@ let createLogOpts = function(maxCases)
             },
             afterBuildTicks: function (chartObj) { 
                 chartObj.ticks = [];
-                console.log(chartObj);
                 for(let i = 0; i < tickPower + 1; ++i)
                 {
                     chartObj.ticks.push(Math.pow(10,i));
