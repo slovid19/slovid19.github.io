@@ -1,7 +1,7 @@
 let createLogOpts = function(maxCases)
 {
-    tickPower = Math.ceil(Math.log10(maxCases));
-    maxTick = Math.pow(10, tickPower);
+    const tickPower = Math.ceil(Math.log10(maxCases));
+    const maxTick = Math.pow(10, tickPower);
     let opts =  
         {
             scaleLabel: {
@@ -19,10 +19,12 @@ let createLogOpts = function(maxCases)
             },
             afterBuildTicks: function (chartObj) { 
                 chartObj.ticks = [];
+                console.log(chartObj);
                 for(let i = 0; i < tickPower + 1; ++i)
                 {
                     chartObj.ticks.push(Math.pow(10,i));
                 }
+
             }
         };
     return opts;
@@ -201,7 +203,7 @@ let initTownCases = function(townTimeData)
     let updateTime = townTimeData.lastUpdated;
     document.getElementById("updateTownTime").innerText = 
         "Last updated: "+updateTime;
-    let maxCases = datasets[7].maxCases;
+    let maxCases = datasets[8].maxCases;
     let logarithmicOptions = createLogOpts(maxCases);
     let linearOptions = createLinearOpts(maxCases);
     var chartEl = document.getElementById("townCaseGraph");
