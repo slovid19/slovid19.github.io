@@ -1,5 +1,34 @@
+@media only screen and (max-width: 768px)
+{
+    body {
+        width: 95%;
+    }
+}
+@media only screen and (min-width: 768px)
+{
+    body {
+        width: 80%;
+    }
+}
+@media only screen and (min-width: 1024px)
+{
+    body {
+        width: 75%;
+    }
+}
+@media only screen and (min-width: 1280px)
+{
+    body {
+        width: 65%;
+    }
+}
+@media only screen and (min-width: 1600px)
+{
+    body {
+        width: 50%;
+    }
+}
 body {
-    width: 65%;
     margin: auto;
     background-color: #ffffff
 }
