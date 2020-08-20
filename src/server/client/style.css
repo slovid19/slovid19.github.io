@@ -7,13 +7,13 @@
 @media only screen and (min-width: 768px)
 {
     body {
-        width: 80%;
+        width: 95%;
     }
 }
 @media only screen and (min-width: 1024px)
 {
     body {
-        width: 75%;
+        width: 80%;
     }
 }
 @media only screen and (min-width: 1280px)
