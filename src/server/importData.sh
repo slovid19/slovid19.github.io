@@ -1,4 +1,4 @@
 #!/bin/bash
 mkdir -p import/
-cp ../../data/export/* import
+cp ../../slovid_data_gathering/export/* import
 mv import/* client
