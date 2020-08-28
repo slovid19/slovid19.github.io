@@ -87,11 +87,12 @@ h4 {
     position: relative;
     margin: 0px;
     height: 100%;
-    width: calc(100%);
+    width: 100%;
 }
 .datasetContent .graphContent {
     float: left;
     margin: auto;
+    width: 100%;
 }
 .datasetContent .graphContent.hidden {
     position: absolute;
