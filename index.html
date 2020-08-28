@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8"/>
+        <script src="src/server/client/script.js"></script>
+        <script src="src/server/client/Chart.js"></script>
+        <link rel="stylesheet" type="text/css" href="src/server/client/style.css">
+        <title>SLOVID 19</title>
+    </head>
+    <body>
+        <h2> COVID-19 Cases Surrounding Cal Poly SLO </h2>
+        <div class = "graphsContainer">
+            <div class = "graphContent">
+                <div class = "tabs">
+                    <button class = "tablinks active" id="logarithmicAgeTab">
+                        Logarithmic
+                    </button>
+                    <button class = "tablinks" id="linearAgeTab">
+                        Linear
+                    </button>
+                </div>
+                <div class = "title">
+                    <p>Cases by Age over Time</p>
+                </div>
+
+                <div class = "tabContent">
+                    <canvas class = "graph" id = "ageCaseGraph"></canvas>
+                    <div class = "legend" id = "ageCaseLegend"></div>
+                </div>
+                <div class = "updateTime">
+                    <p id = "updateAgeTime"></p>
+                </div>
+            </div>
+            <br/>
+            <div class = "graphContent">
+                <div class = "tabs">
+                    <button class = "tablinks active" id="logarithmicTownTab">
+                        Logarithmic
+                    </button>
+                    <button class = "tablinks" id="linearTownTab">
+                        Linear
+                    </button>
+                </div>
+                <div class = "title">
+                    <p>Cases by City or Town over Time</p>
+                </div>
+
+                <div class = "tabContent">
+                    <canvas class="graph" id = "townCaseGraph"></canvas>
+                    <div class = "legend" id = "townCaseLegend"></div>
+                </div>
+                <div class = "details">
+                    <p><b>Note:</b> Less total cases are reported here than by age because these locations do not cover the whole county.</p>
+                </div>
+                <div class = "updateTime">
+                    <p id = "updateTownTime"></p>
+                </div>
+            </div>
+        </div>
+        <h3>About this Site</h3>
+        <p class="about">
+        With Cal Poly set to reopen "de-densified" in the Fall, it is important to have easily understandable data on the ongoing pandemic within SLO county.         </p>
+        <h4>Why a Logarithmic Graph</h4>
+        <p class="about">
+        Without intervention, <a href="https://www.washingtonpost.com/graphics/2020/world/corona-simulator/">viruses spread exponentially.</a> Exponential growth of a disease can quickly overwhelm healthcare institutions. The logarithmic graphs shown above can better illustrate whether the growth rate of COVID-19 is exponential or not. 
+        </p> 
+        <h4>Understanding a Logarithmic Scale</h4>
+        <p class="about">
+        A straight steep line on a logarithmic scale reveals fast exponential growth, but a downward curve or a flat line reveals a slower growth rate. The graph of COVID-19 cases often switches between the two. For instance, the cases in San Luis Obispo were exponentially growing in mid-June and thus the logarithmic graph of those cases has a roughly straight line during that time. That concept is highlighted in the graph below:
+        </p>
+        <img class="exampleGraph" src = "src/server/client/SLOLinearHighlight.png"/>
+        <h4>Interpreting Results</h4>
+        <p class="about">
+        Since social distancing affects the growth rate of the coronavirus, a logarithmic graph can sometimes indicate how well or how poorly a population has been social distancing. This allows for a better understanding on the impact certain events and policies have on the growth of COVID-19.
+        </p>
+        <h4>References</h4>
+        <p class="about">
+This website is designed to supplement the graphs on the <a href="https://www.emergencyslo.org/en/positive-case-details.aspx">emergencyslo website</a> to include an option for seeing important data in a logarithmic scale. All data used here is sourced from that website and hosted by The Office of Emergency Services in SLO County. This website is in no way affiliated with or a representative of The Office of Emergency Services in SLO County, nor is it affiliated with any other governmental entity.
+    </p>
+    </body>
+</html>
