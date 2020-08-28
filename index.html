@@ -2,9 +2,9 @@
 <html lang="en">
     <head>
         <meta charset="utf-8"/>
-        <script src="src/server/client/script.js"></script>
-        <script src="src/server/client/Chart.js"></script>
-        <link rel="stylesheet" type="text/css" href="src/server/client/style.css">
+        <script src="script.js"></script>
+        <script src="chart.js"></script>
+        <link rel="stylesheet" type="text/css" href="style.css">
         <title>SLOVID 19</title>
     </head>
     <body>
@@ -32,30 +32,67 @@
                 </div>
             </div>
             <br/>
-            <div class = "graphContent">
-                <div class = "tabs">
-                    <button class = "tablinks active" id="logarithmicTownTab">
-                        Logarithmic
+            <div class = "datasetContent">
+                <div class = "datasetSwitchContainer tabs">
+                    <button class = "tablinks active" id = "totalTownTab">
+                        Total Population Graph
                     </button>
-                    <button class = "tablinks" id="linearTownTab">
-                        Linear
+                    <button class = "tablinks" id = "capitaTownTab">
+                        Per 1000 Residents Graph
                     </button>
                 </div>
-                <div class = "title">
-                    <p>Cases by City or Town over Time</p>
-                </div>
+                <div id = "totalTownContent" class = "graphContent">
+                    <div class = "tabs">
+                        <button class = "tablinks active" id="logarithmicTownTab">
+                            Logarithmic
+                        </button>
+                        <button class = "tablinks" id="linearTownTab">
+                            Linear
+                        </button>
+                    </div>
+                    <div class = "title">
+                        <p>Cases by City or Town over Time</p>
+                    </div>
 
-                <div class = "tabContent">
-                    <canvas class="graph" id = "townCaseGraph"></canvas>
-                    <div class = "legend" id = "townCaseLegend"></div>
+                    <div class = "tabContent">
+                        <canvas class="graph" id = "townCaseGraph"></canvas>
+                        <div class = "legend" id = "townCaseLegend"></div>
+                    </div>
+                    <div class = "details">
+                        <p><b>Note:</b> Less total cases are reported here than by age because these locations do not cover the whole county.</p>
+                        <p><b>Note:</b> emergencyslo has a reporting error for CMC Inmates on 8/26</p>
+                    </div>
+                    <div class = "updateTime">
+                        <p id = "updateTownTime"></p>
+                    </div>
                 </div>
-                <div class = "details">
-                    <p><b>Note:</b> Less total cases are reported here than by age because these locations do not cover the whole county.</p>
-                </div>
-                <div class = "updateTime">
-                    <p id = "updateTownTime"></p>
+                <br/>
+                <div id = "capitaTownContent" class = "graphContent hidden">
+                    <div class = "tabs">
+                        <button class = "tablinks active" id="logarithmicTownCapitaTab">
+                            Logarithmic
+                        </button>
+                        <button class = "tablinks" id="linearTownCapitaTab">
+                            Linear
+                        </button>
+                    </div>
+                    <div class = "title">
+                        <p>Cases per 1000 Residents by City or Town Over Time</p>
+                    </div>
+
+                    <div class = "tabContent">
+                        <canvas class = "graph" id = "townCapitaGraph"></canvas>
+                        <div class = "legend" id = "townCapitaLegend"></div>
+                    </div>
+                    <br/>
+                    <div id="townCapitaSources" class= "details">
+                    </div>
+                    <div class = "updateTime">
+                        <p id = "updateTownCapitaTime"></p>
+                    </div>
                 </div>
             </div>
+
         </div>
         <h3>About this Site</h3>
         <p class="about">
@@ -68,14 +105,14 @@
         <p class="about">
         A straight steep line on a logarithmic scale reveals fast exponential growth, but a downward curve or a flat line reveals a slower growth rate. The graph of COVID-19 cases often switches between the two. For instance, the cases in San Luis Obispo were exponentially growing in mid-June and thus the logarithmic graph of those cases has a roughly straight line during that time. That concept is highlighted in the graph below:
         </p>
-        <img class="exampleGraph" src = "src/server/client/SLOLinearHighlight.png"/>
+        <img class="exampleGraph" src = "SLOLinearHighlight.png"/>
         <h4>Interpreting Results</h4>
         <p class="about">
         Since social distancing affects the growth rate of the coronavirus, a logarithmic graph can sometimes indicate how well or how poorly a population has been social distancing. This allows for a better understanding on the impact certain events and policies have on the growth of COVID-19.
         </p>
         <h4>References</h4>
         <p class="about">
-This website is designed to supplement the graphs on the <a href="https://www.emergencyslo.org/en/positive-case-details.aspx">emergencyslo website</a> to include an option for seeing important data in a logarithmic scale. All data used here is sourced from that website and hosted by The Office of Emergency Services in SLO County. This website is in no way affiliated with or a representative of The Office of Emergency Services in SLO County, nor is it affiliated with any other governmental entity.
-    </p>
+        This website is designed to supplement the graphs on the <a href="https://www.emergencyslo.org/en/positive-case-details.aspx">emergencyslo website</a> to include an option for seeing important data in a logarithmic scale. All case data used here is sourced from that website and hosted by The Office of Emergency Services in SLO County. This website is in no way affiliated with or a representative of The Office of Emergency Services in SLO County, nor is it affiliated with any other governmental entity.
+        </p>
     </body>
 </html>
