@@ -1,4 +1,5 @@
-let createLogOpts = function(maxCases)
+let caseCharts = {};
+let createLogOpts = function(maxCases, includeZero = false)
 {
     const tickPower = Math.ceil(Math.log10(maxCases));
     const maxTick = Math.pow(10, tickPower);
@@ -11,7 +12,7 @@ let createLogOpts = function(maxCases)
             type: 'logarithmic',
             position: 'left',
             ticks: {
-                min: 1, //minimum tick
+                min: (includeZero) ? 0 : 1, //minimum tick
                 max: maxTick, //maximum tick
                 callback: function (value, index, values) {
                     return Number(value.toString());
@@ -19,6 +20,8 @@ let createLogOpts = function(maxCases)
             },
             afterBuildTicks: function (chartObj) { 
                 chartObj.ticks = [];
+                if(includeZero)
+                    chartObj.ticks.push(0);
                 for(let i = 0; i < tickPower + 1; ++i)
                 {
                     chartObj.ticks.push(Math.pow(10,i));
@@ -63,36 +66,88 @@ let createLogChart = function(ctx, labels, datasets, logOptions)
             scales: {
                 yAxes:[logOptions],
                 xAxes:[{scaleLabel: {display: true, labelString: "Date"}}]
+            },
+
+            tooltips: {
+                callbacks: {
+                    label: function(tooltipItem, data) {
+                        let num = tooltipItem.yLabel;
+                        let wholeNum = Math.floor(num);
+                        let decimalPlace = 
+                            Math.round((num - Math.floor(num))*100) / 100;
+                        num = wholeNum + decimalPlace;
+                        if(num == 0)
+                            num = "0";
+                        return (num); 
+                    }
+                }
             }
         },
     });
     return chart;
 
 }
-let addButtonListeners = function(linearId, logarithmicId, linearOpts, logarithmicOpts, chart)
+let addButtonListeners = function(linearIds, logarithmicIds, linearOpts, logarithmicOpts, chart)
 {
-    document.getElementById(linearId).addEventListener("click", function()
-        {
-            document.getElementById(linearId).style.display = "block";
-            document.getElementById(linearId).className = "tablinks active";
-            document.getElementById(logarithmicId).className = "tablinks";
-            chart.options.scales.yAxes = [linearOpts] ;
-            chart.update();
-        });
-    document.getElementById(logarithmicId).addEventListener("click", 
-        function () 
-        {
-            document.getElementById(logarithmicId).style.display = "block";
-            document.getElementById(logarithmicId).className = 
-                "tablinks active";
-            document.getElementById(linearId).className = "tablinks";
-            chart.options.scales.yAxes = [logarithmicOpts] ;
-            chart.update();
+    for(let i in linearIds)
+    {
+        let linearId = linearIds[i];
+        document.getElementById(linearId).addEventListener("click", function()
+            {
+                for(let j in linearIds)
+                {
+                    let linearId = linearIds[j];
+                    document.getElementById(linearId).style.display = "block";
+                    document.getElementById(linearId).className = "tablinks active";
+                }
+                for(let j in logarithmicIds)
+                {
+                    let logarithmicId = logarithmicIds[j];
+                    document.getElementById(logarithmicId).className = "tablinks";
+                }
 
-        });
+                chart.options.scales.yAxes = [linearOpts] ;
+                if(window.getComputedStyle(chart.canvas).visibility == "visible")
+                {
+                    console.log(window.getComputedStyle(chart.canvas).visibility);
+                    chart.update();
+                }
+            
+            }
+        );
+    }
+    for(let i in logarithmicIds)
+    {
+        let logarithmicId = logarithmicIds[i];
+        document.getElementById(logarithmicId).addEventListener("click", 
+            function () 
+            {
+                for(let j in logarithmicIds)
+                {
+                    let logarithmicId = logarithmicIds[j];
+                    console.log(logarithmicId);
+                    document.getElementById(logarithmicId).style.display = "block";
+                    document.getElementById(logarithmicId).className = 
+                        "tablinks active";
+                }
+                for(let i in linearIds)
+                {
+                    let linearId = linearIds[i];
+                    document.getElementById(linearId).className = "tablinks";
+                }
+                chart.options.scales.yAxes = [logarithmicOpts] ;
 
-
+                if(window.getComputedStyle(chart.canvas).visibility == "visible")
+                {
+                    console.log(window.getComputedStyle(chart.canvas).visibility == "visible");
+                    chart.update();
+                }
+            }
+        );
+    }
 }
+
+
 let addTouchListeners = function(chartEl)
 {
     chartEl.addEventListener("touchstart", function (e) {
@@ -132,9 +187,56 @@ let initAgeCases = function(ageTimeData)
     var chartEl = document.getElementById("ageCaseGraph");
     var ctx = chartEl.getContext('2d');
     var caseLineChart = createLogChart(ctx, labels, datasets, logarithmicOptions);
+    caseCharts["ageCaseGraph"] = caseLineChart;
     createLegend(caseLineChart, document.getElementById("ageCaseLegend"));
     addTouchListeners(chartEl);
-    addButtonListeners("linearAgeTab", "logarithmicAgeTab", linearOptions, logarithmicOptions, caseLineChart);
+    addButtonListeners(["linearAgeTab"], ["logarithmicAgeTab"], linearOptions, logarithmicOptions, caseLineChart);
+}
+let initTownCapitaCases = function(townCapitaData)
+{
+    let datasets = townCapitaData.datasets;
+    let labels = townCapitaData.labels;
+    let updateTime = townCapitaData.lastUpdated;
+    document.getElementById("updateTownCapitaTime").innerText = 
+        "Last updated: "+updateTime;
+    let maxCases = datasets[6].maxCases;
+    let logarithmicOptions = createLogOpts(maxCases, true);
+    let linearOptions = createLinearOpts(maxCases);
+    var chartEl = document.getElementById("townCapitaGraph");
+    var ctx = chartEl.getContext('2d');
+    var caseLineChart = createLogChart(ctx, labels, datasets, logarithmicOptions);
+    caseCharts["townCapitaGraph"] = caseLineChart;
+    createLegend(caseLineChart, document.getElementById("townCapitaLegend"), townCapitaData);
+    citeSources(document.getElementById("townCapitaSources"), townCapitaData);
+    addTouchListeners(chartEl);
+    addButtonListeners(["linearTownCapitaTab", "linearTownTab"], ["logarithmicTownCapitaTab", "logarithmicTownTab"], linearOptions, logarithmicOptions, caseLineChart);
+    //    addButtonListeners(["linearTownTab"], ["logarithmicTownTab"], linearOptions, logarithmicOptions, caseLineChart);
+}
+let createSource = function(num, date, URL)
+{
+    let el = document.createElement("span");
+    el.className = "sourceText";
+    el.innerHTML = "["+(Number(num)+1)+"]: Based on population estimate for "
+        + date + " from: ";
+
+    let a = document.createElement("a");
+    a.href = URL;
+    a.innerText = URL
+    el.appendChild(a);
+    el.appendChild(document.createElement("br"));
+    return el;
+}
+let citeSources = function(el, data)
+{
+    for(let i in data.sources)
+    {
+        let text = "["+(Number(i)+1)+"]: Based on population estimate for "
+            + data.sources[i]["Estimation Date"] + " from: " 
+            + data.sources[i]["URL"];
+        let sourceEl = createSource(i, data.sources[i]["Estimation Date"],
+            data.sources[i]["URL"]);
+        el.appendChild(sourceEl);
+    }
 }
 let createLegendColor = function(color)
 {
@@ -143,11 +245,21 @@ let createLegendColor = function(color)
     el.style.backgroundColor = color;
     return el;
 }
-let createLegendText = function(text)
+let createLegendText = function(text, data)
 {
+    let source = undefined;
+    if(data.townSources)
+        source = data.townSources[text];
     let el = document.createElement("span");
     el.className = "legendText";
     el.innerText = text;
+    if(source)
+    {
+        let sourceEl = document.createElement("span");
+        sourceEl.className = "legendSource";
+        sourceEl.innerHTML = "<sup>["+source+"]</sup>";
+        el.appendChild(sourceEl);
+    }
     return el;
 }
 let setLegendItemHidden = function(el, item, chart)
@@ -170,7 +282,7 @@ let legendItemClicked = function(el, item, chart)
         setLegendItemShown(el, item, chart) :
         setLegendItemHidden(el, item, chart);
 }
-let createLegendItem = function(item, chart)
+let createLegendItem = function(item, chart, data)
 {
     let el = document.createElement("div");
     el.className = "legendItem";
@@ -179,17 +291,17 @@ let createLegendItem = function(item, chart)
     else
         el.className += " shown";
     el.appendChild(createLegendColor(item.fillStyle));
-    el.appendChild(createLegendText(item.text));
+    el.appendChild(createLegendText(item.text, data));
     let itemClick = () => {legendItemClicked(el, item, chart)};
     el.addEventListener("click", itemClick);
     return el;
 }
-let createLegend = function(chart, legendContainer)
+let createLegend = function(chart, legendContainer, data={})
 {
     for(i in chart.legend.legendItems)
     {
         let item = chart.legend.legendItems[i];
-        legendContainer.appendChild(createLegendItem(item, chart));
+        legendContainer.appendChild(createLegendItem(item, chart, data));
     }
 }
 
@@ -208,19 +320,74 @@ let initTownCases = function(townTimeData)
     var chartEl = document.getElementById("townCaseGraph");
     var ctx = chartEl.getContext('2d');
     var caseLineChart = createLogChart(ctx, labels, datasets, logarithmicOptions);
+    caseCharts["townCaseGraph"] = caseLineChart;
     createLegend(caseLineChart, document.getElementById("townCaseLegend"));
 
 
-    addButtonListeners("linearTownTab", "logarithmicTownTab", linearOptions, logarithmicOptions, caseLineChart);
+    addButtonListeners(["linearTownTab", "linearTownCapitaTab"], ["logarithmicTownTab", "logarithmicTownCapitaTab"], linearOptions, logarithmicOptions, caseLineChart);
+
 }
+let initTownDataTabs = function()
+{
+    let totalTownTab = document.getElementById("totalTownTab");
+    let capitaTownTab = document.getElementById("capitaTownTab");
+    let totalTownContent = document.getElementById("totalTownContent");
+    let capitaTownContent = document.getElementById("capitaTownContent");
+    capitaTownTab.addEventListener("click", function()
+        {
+            let capitaTownChart = caseCharts["townCapitaGraph"];
+
+            capitaTownTab.className = "tablinks active";
+            totalTownTab.className = "tablinks";
+            capitaTownContent.className = "graphContent show";
+            totalTownContent.className = "graphContent hidden";
+            capitaTownChart.update();
+        });
+    totalTownTab.addEventListener("click", function()
+        {
+            let totalTownChart = caseCharts["townCaseGraph"];
+            totalTownTab.className = "tablinks active";
+            capitaTownTab.className = "tablinks";
+            totalTownContent.className = "graphContent show";
+            capitaTownContent.className = "graphContent hidden";
+            totalTownChart.update();
+        });
+
+}
+/*   document.getElementById(totalTownTab).addEventListener("click", function()
+        {
+            document.getElementById(total).style.display = "block";
+            document.getElementById(linearId).className = "tablinks active";
+            document.getElementById(logarithmicId).className = "tablinks";
+            chart.options.scales.yAxes = [linearOpts] ;
+            chart.update();
+        });
+    document.getElementById(logarithmicId).addEventListener("click", 
+        function () 
+        {
+            document.getElementById(logarithmicId).style.display = "block";
+            document.getElementById(logarithmicId).className = 
+                "tablinks active";
+            document.getElementById(linearId).className = "tablinks";
+            chart.options.scales.yAxes = [logarithmicOpts] ;
+            chart.update();
+
+        });
+
+}
+*/
 
 window.onload = function()
 {
     Chart.defaults.global.maintainAspectRatio = false;
     fetch("ageTimeData.json")
         .then(response => response.json())
-        .then(json => initAgeCases(json))
+        .then(json => initAgeCases(json));
     fetch("townTimeData.json")
         .then(response => response.json())
-        .then(json => initTownCases(json))
+        .then(json => initTownCases(json));
+    fetch("townTimePer1000.json")
+        .then(response => response.json())
+        .then(json => initTownCapitaCases(json));
+    initTownDataTabs();
 }

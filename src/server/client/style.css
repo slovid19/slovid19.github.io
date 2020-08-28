@@ -83,6 +83,35 @@ h4 {
     border: 1px solid #ccc;
     border-style: solid;
 }
+.datasetContent {
+    position: relative;
+    margin: 0px;
+    height: 100%;
+    width: 100%;
+}
+.datasetContent .graphContent {
+    float: left;
+    margin: auto;
+    width: 100%;
+}
+.datasetContent .graphContent.hidden {
+    position: absolute;
+    visibility: hidden;
+}
+.datasetContent .graphContent.show {
+    position: relative;
+    visibility: show;
+}
+
+.datasetSwitchContainer {
+    float: left;
+    width: 100%;
+    border: 1px;
+    border-bottom: 0px;
+    border-color: #ccc;
+    border-style: solid;
+}
+
 .graph {
     width: 100%;
 }

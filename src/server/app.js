@@ -22,6 +22,9 @@ app.get('/style.css', function(req, res) {
 app.get('/chart.js', function(req, res) {
     res.sendFile(path.join(__dirname + "/client/Chart.js"));
 });
+app.get('/townTimePer1000.json', function(req, res) {
+    res.sendFile(path.join(__dirname + "/client/townTimePer1000.json"));
+});
 app.get('/SLOLinearHighlight.png', function(req, res) {
     res.sendFile(path.join(__dirname + "/client/SLOLinearHighlight.png"));
 });
