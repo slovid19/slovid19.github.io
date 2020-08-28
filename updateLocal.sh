@@ -1,5 +1,5 @@
 #!/bin/sh
-cd data
+cd slovid_data_gathering
 ./updateData.sh
 cd ..
 

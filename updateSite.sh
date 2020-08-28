@@ -1,9 +1,9 @@
 #!/bin/sh
-cd data
+cd slovid_data_gathering
 ./updateData.sh
 cd ..
 
-cp data/export/* .
+cp slovid_data_gathering/export/* .
 git add *.json
 git commit -m "Updating Case data"
 git push
