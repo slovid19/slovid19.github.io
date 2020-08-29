@@ -1,5 +1,5 @@
 let caseCharts = {};
-let createLogOpts = function(maxCases, includeZero = false)
+let createLogOpts = function(maxCases, includeZero = false, label = 'Case Numbers')
 {
     const tickPower = Math.ceil(Math.log10(maxCases));
     const maxTick = Math.pow(10, tickPower);
@@ -7,7 +7,7 @@ let createLogOpts = function(maxCases, includeZero = false)
         {
             scaleLabel: {
                 display: true,
-                labelString: 'Case Numbers'
+                labelString: label
             },
             type: 'logarithmic',
             position: 'left',
@@ -31,13 +31,13 @@ let createLogOpts = function(maxCases, includeZero = false)
         };
     return opts;
 }
-let createLinearOpts = function(maxCases)
+let createLinearOpts = function(maxCases, label = 'Case Numbers')
 {
     let opts = 
         {
             scaleLabel: {
                 display: true,
-                labelString: 'Case Numbers',
+                labelString: label,
             },
             max_tick: maxCases,
             type: 'linear',
@@ -200,8 +200,8 @@ let initTownCapitaCases = function(townCapitaData)
     document.getElementById("updateTownCapitaTime").innerText = 
         "Last updated: "+updateTime;
     let maxCases = datasets[6].maxCases;
-    let logarithmicOptions = createLogOpts(maxCases, true);
-    let linearOptions = createLinearOpts(maxCases);
+    let logarithmicOptions = createLogOpts(maxCases, true, 'Cases Per 1000 Residents');
+    let linearOptions = createLinearOpts(maxCases, 'Cases Per 1000 Residents');
     var chartEl = document.getElementById("townCapitaGraph");
     var ctx = chartEl.getContext('2d');
     var caseLineChart = createLogChart(ctx, labels, datasets, logarithmicOptions);
