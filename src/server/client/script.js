@@ -380,10 +380,10 @@ let initTownDataTabs = function()
 window.onload = function()
 {
     Chart.defaults.global.maintainAspectRatio = false;
-    fetch("ageTimeData.json")
+    fetch("https://raw.githubusercontent.com/slovid19/slovid_data_gathering/master/export/ageTimeData.json")
         .then(response => response.json())
         .then(json => initAgeCases(json));
-    fetch("townTimeData.json")
+    fetch("https://raw.githubusercontent.com/slovid19/slovid_data_gathering/master/export/townTimeData.json")
         .then(response => response.json())
         .then(json => initTownCases(json));
     fetch("townTimePer1000.json")
