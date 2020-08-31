@@ -386,7 +386,7 @@ window.onload = function()
     fetch("https://raw.githubusercontent.com/slovid19/slovid_data_gathering/master/export/townTimeData.json")
         .then(response => response.json())
         .then(json => initTownCases(json));
-    fetch("townTimePer1000.json")
+    fetch("https://raw.githubusercontent.com/slovid19/slovid_data_gathering/master/export/townTimePer1000.json")
         .then(response => response.json())
         .then(json => initTownCapitaCases(json));
     initTownDataTabs();
